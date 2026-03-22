@@ -1,0 +1,23 @@
+# Python virtual environment
+# 1000s of files, nobody else needs them
+venv/
+
+# Secret config — database passwords, API keys
+# If this goes to GitHub, your database is exposed to the world
+.env
+
+# Python bytecode — auto-generated, not source code
+__pycache__/
+*.pyc
+*.pyo
+
+# MacOS system file — noise
+.DS_Store
+
+# VSCode settings — personal to your machine
+.vscode/
+
+# Test and coverage output
+.pytest_cache/
+htmlcov/
+.coverage
