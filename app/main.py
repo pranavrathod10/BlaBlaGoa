@@ -14,8 +14,9 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:3000",        # Next.js local dev
-        "https://your-app.vercel.app",  # Vercel production (update later)
+        "http://localhost:3000",
+        "https://blablagoa-backend.onrender.com",
+        "https://your-app.vercel.app",  # update when frontend is deployed
     ],
     allow_credentials=True,
     allow_methods=["*"],
