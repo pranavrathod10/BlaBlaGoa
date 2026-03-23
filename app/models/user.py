@@ -1,6 +1,9 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, Date
 from sqlalchemy.sql import func
 from app.core.database import Base
+from pydantic import BaseModel, EmailStr
+from typing import Optional
+from datetime import date, datetime
 
 
 class User(Base):
@@ -35,3 +38,37 @@ class User(Base):
     # --- Timestamps (automatic, never set manually) ---
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+
+
+# ── Pydantic schemas (API data shapes) ─────────────────────────
+
+# What client sends to CREATE a user — minimal, just what's required
+class UserCreate(BaseModel):
+    email: EmailStr        # validates it's a real email format
+    name: str
+
+
+# What client sends to UPDATE a user — all optional
+# Optional means client can send just the fields they want to change
+class UserUpdate(BaseModel):
+    name: Optional[str] = None
+    bio: Optional[str] = None
+    avatar_url: Optional[str] = None
+    date_of_birth: Optional[date] = None
+
+
+# What you send BACK to the client — never expose clerk_id internals
+class UserResponse(BaseModel):
+    id: int
+    email: str
+    name: str
+    bio: Optional[str] = None
+    avatar_url: Optional[str] = None
+    date_of_birth: Optional[date] = None
+    is_active: bool
+    is_profile_complete: bool
+    created_at: datetime
+
+    class Config:
+        from_attributes = True   # lets Pydantic read SQLAlchemy objects directly
