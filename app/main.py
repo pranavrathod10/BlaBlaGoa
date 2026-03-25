@@ -16,7 +16,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",
         "https://blablagoa-backend.onrender.com",
-        "https://your-app.vercel.app",  # update when frontend is deployed
+        "https://blablagoa-frontend.vercel.app/",  # update when frontend is deployed
     ],
     allow_credentials=True,
     allow_methods=["*"],
