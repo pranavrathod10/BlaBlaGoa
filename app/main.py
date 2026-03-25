@@ -15,8 +15,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
-        "https://blablagoa-backend.onrender.com",
-        "https://blablagoa-frontend.vercel.app/",  # update when frontend is deployed
+        "https://blablagoa-frontend.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
