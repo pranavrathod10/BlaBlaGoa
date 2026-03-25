@@ -1,0 +1,50 @@
+name: Test and Deploy
+
+# When does this run?
+# Every push to main branch triggers this pipeline
+on:
+  push:
+    branches: [main]
+
+jobs:
+  # ── Job 1: Run tests ─────────────────────────────────────────
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1 — Check out your code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2 — Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      # Step 3 — Install dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Step 4 — Run your tests
+      # Uses SQLite so no real database needed in CI
+      - name: Run tests
+        run: pytest tests/ -v
+
+  # ── Job 2: Deploy to Render ───────────────────────────────────
+  # Only runs if tests pass
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test # ← waits for test job to succeed first
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Trigger Render to redeploy
+      # Render provides a deploy hook URL for this
+      - name: Deploy to Render
+        run: |
+          curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
