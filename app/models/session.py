@@ -32,9 +32,11 @@ class SessionResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
+    request_id: int
     user_one_id: int
     user_two_id: int
     status: str
     started_at: datetime
     ended_at: Optional[datetime] = None
     expires_at: datetime
+    other_user_name: Optional[str] = None

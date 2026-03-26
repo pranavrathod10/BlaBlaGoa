@@ -16,7 +16,9 @@ class Message(Base):
     sent_at = Column(DateTime(timezone=True), server_default=func.now())
 
     # True = flushed after session ends
-    is_deleted = Column(Boolean, default=False)
+    # We mark as deleted rather than actually removing rows
+    # A background cleanup can permanently delete after 24 hours
+    is_deleted = Column(Boolean, default=False, nullable=False)
 
     session = relationship("Session")
     sender = relationship("User")
@@ -26,6 +28,7 @@ class Message(Base):
 
 class MessageCreate(BaseModel):
     content: str
+
 
 class MessageResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
