@@ -13,26 +13,20 @@ class ConnectionRequest(Base):
     id = Column(Integer, primary_key=True, index=True)
     sender_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     receiver_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-
-    # pending / accepted / rejected / expired
+    message = Column(String, nullable=False, default="")
     status = Column(String, default="pending", nullable=False)
-
     created_at = Column(DateTime(timezone=True), server_default=func.now())
-
-    # Set when receiver responds
     responded_at = Column(DateTime(timezone=True), nullable=True)
-
-    # Expires 1 hour after creation if no response
     expires_at = Column(DateTime(timezone=True), nullable=False)
 
     sender = relationship("User", foreign_keys=[sender_id])
     receiver = relationship("User", foreign_keys=[receiver_id])
 
 
-# ── Pydantic schemas ────────────────────────────────────────────
-
 class ConnectionRequestCreate(BaseModel):
     receiver_id: int
+    message: str
+
 
 class ConnectionRequestResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -40,6 +34,7 @@ class ConnectionRequestResponse(BaseModel):
     id: int
     sender_id: int
     receiver_id: int
+    message: str
     status: str
     created_at: datetime
     responded_at: Optional[datetime] = None
