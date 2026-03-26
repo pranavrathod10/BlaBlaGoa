@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-from app.routers import users, discover, connections, sessions, websocket
+from app.routers import users, discover, connections, sessions
+from app.routers.websocket import router as websocket_router
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -10,7 +11,6 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
-# CORS — allows your frontend to call this API
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -22,13 +22,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Register routers
 app.include_router(users.router)
 app.include_router(discover.router)
 app.include_router(connections.router)
 app.include_router(sessions.router)
-app.include_router(websocket.router)
-
+app.include_router(websocket_router)
 
 @app.get("/health", tags=["health"])
 def health_check():
