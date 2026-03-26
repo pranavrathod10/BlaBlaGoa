@@ -38,7 +38,6 @@ class ConnectionRequestOut(BaseModel):
 
 
 @router.post("/", response_model=ConnectionRequestOut, status_code=201)
-@limiter.limit("10/minute")
 def send_request(
     body: SendRequestBody,
     current_user: User = Depends(get_current_user),
